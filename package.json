@@ -1,0 +1,41 @@
+{
+  "name": "@algorismus/elementor-ultra-playground",
+  "version": "1.0.1",
+  "description": "One command → a local WordPress with Elementor + the Elementor Ultra companion plugin, ready for exjsx and MCP. No Docker, no PHP, no git clone. Boots from a pre-baked snapshot in seconds.",
+  "type": "module",
+  "bin": {
+    "elementor-ultra-playground": "bin/eu-playground.mjs"
+  },
+  "files": [
+    "bin/",
+    "assets/",
+    "snapshot/manifest.json",
+    "README.md"
+  ],
+  "scripts": {
+    "snapshot": "node build/make-snapshot.mjs"
+  },
+  "dependencies": {
+    "@wp-playground/cli": "3.1.48"
+  },
+  "engines": {
+    "node": ">=18.17"
+  },
+  "keywords": [
+    "elementor",
+    "wordpress",
+    "playground",
+    "elementor-ultra",
+    "elementor-jsx",
+    "mcp",
+    "local-dev",
+    "ai-agents"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Algorismus-io/elementor-ultra",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Algorismus-io/elementor-ultra-mcp.git",
+    "directory": "dev/playground"
+  }
+}

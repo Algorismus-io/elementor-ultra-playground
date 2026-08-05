@@ -1,0 +1,20 @@
+{
+  "name": "@algorismus/elementor-ultra-playground snapshot",
+  "snapshot_version": 1,
+  "built_from": "dev/playground/setup-playground.mjs",
+  "wordpress": "bundled (Playground latest at build time)",
+  "elementor": "4.2.1",
+  "php": "8.2",
+  "default_port": 8899,
+  "download_url": "https://github.com/Algorismus-io/elementor-ultra-mcp/releases/download/playground-snapshot-v1/site.tar.gz",
+  "release_tag": "playground-snapshot-v1",
+  "tarball": {
+    "file": "site.tar.gz",
+    "bytes": 52407585,
+    "sha256": "27e157a34594f3c80d548f0e6470757c38eb59780d6a67f0742538e775954f28"
+  },
+  "credentials": {
+    "WP_USER": "admin",
+    "WP_APP_PASSWORD": "VorycCYtTT00nOS06BJ0BePq"
+  }
+}

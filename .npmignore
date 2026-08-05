@@ -1,0 +1,6 @@
+# The 50 MB site snapshot is hosted as a GitHub release asset and fetched+cached at runtime —
+# it must never be bundled into the npm tarball.
+snapshot/site.tar.gz
+
+# Build tooling isn't needed by consumers.
+build/

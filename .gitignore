@@ -1,0 +1,6 @@
+node_modules/
+# The 50 MB snapshot is a GitHub release asset, never committed.
+snapshot/site.tar.gz
+*.log
+.npmrc.publish
+.DS_Store
