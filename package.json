@@ -35,7 +35,6 @@
   "homepage": "https://github.com/Algorismus-io/elementor-ultra",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Algorismus-io/elementor-ultra-mcp.git",
-    "directory": "dev/playground"
+    "url": "git+https://github.com/Algorismus-io/elementor-ultra-playground.git"
   }
 }
