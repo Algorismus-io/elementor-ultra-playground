@@ -6,8 +6,8 @@
   "elementor": "4.2.1",
   "php": "8.2",
   "default_port": 8899,
-  "download_url": "https://github.com/Algorismus-io/elementor-ultra-mcp/releases/download/playground-snapshot-v1/site.tar.gz",
-  "release_tag": "playground-snapshot-v1",
+  "download_url": "https://github.com/Algorismus-io/elementor-ultra-mcp/releases/download/playground-snapshot-v2/site.tar.gz",
+  "release_tag": "playground-snapshot-v2",
   "tarball": {
     "file": "site.tar.gz",
     "bytes": 52406544,
