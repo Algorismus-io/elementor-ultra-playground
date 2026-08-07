@@ -178,8 +178,50 @@ if (mode === 'provision') {
 }
 
 log(`starting WordPress on http://127.0.0.1:${PORT} …`);
-const child = spawn('node', bootArgs, { stdio: ['ignore', QUIET ? 'ignore' : 'ignore', 'inherit'] });
-child.on('error', (e) => { warn(`failed to start Playground: ${e.message}`); process.exit(1); });
+
+// ── supervised child ──────────────────────────────────────────────────────────────────────────
+// Playground's request handler can die on an unhandled PHP-WASM fs error (observed: a request for a
+// CSS path that doesn't resolve takes the whole server down mid-session). The site dir is a live
+// mount, so state survives — respawn instead of leaving the user with a dead port. Opt out with
+// --no-supervise. Restarts are capped per rolling window so a boot-loop still fails loudly.
+const SUPERVISE = !has('--no-supervise');
+let child = null;
+let shuttingDown = false;
+let restarts = [];
+let everReady = false;
+
+function startChild() {
+  // --unhandled-rejections=warn: Playground's request handler can throw an unhandled ErrnoError on
+  // requests for unresolvable static paths (observed: a CSS URL with a trailing slash) — by default
+  // node kills the whole server for it. Warn-mode keeps the process alive (the request errors, the
+  // server keeps serving); the supervisor below remains as the backstop for genuine crashes.
+  child = spawn('node', ['--unhandled-rejections=warn', ...bootArgs], { stdio: ['ignore', QUIET ? 'ignore' : 'ignore', 'inherit'] });
+  child.on('error', (e) => { warn(`failed to start Playground: ${e.message}`); process.exit(1); });
+  child.on('close', (code) => {
+    if (shuttingDown) return;
+    if (!SUPERVISE) { warn(`Playground exited (${code}).`); process.exit(code ?? 1); }
+    const now = Date.now();
+    restarts = restarts.filter((t) => now - t < 120000);
+    if (restarts.length >= 5) {
+      warn(`Playground crashed ${restarts.length} times in 2 minutes — giving up. Last exit: ${code}.`);
+      process.exit(code ?? 1);
+    }
+    restarts.push(now);
+    warn(`Playground crashed (exit ${code}) — restarting in 2s … ${c.dim}(site state persists; known PHP-WASM css-request bug)${c.reset}`);
+    setTimeout(() => { if (!shuttingDown) { startChild(); watchRecovery(); } }, 2000);
+  });
+}
+
+function watchRecovery() {
+  if (!everReady) return; // initial readiness printer below handles the first boot
+  const t0 = Date.now();
+  const t = setInterval(async () => {
+    if (await ready()) { clearInterval(t); log(`recovered — site is serving again on http://127.0.0.1:${PORT}.`); }
+    else if (Date.now() - t0 > 60000) { clearInterval(t); warn('site did not recover within 60s after a crash-restart.'); }
+  }, 1500);
+}
+
+startChild();
 
 // readiness: for the provision path, wait for the credentials file the blueprint writes; for the
 // snapshot path, poll the REST root (WordPress is up as soon as it answers there).
@@ -198,6 +240,7 @@ async function ready() {
 const timer = setInterval(async () => {
   if (await ready()) {
     clearInterval(timer);
+    everReady = true;
     const creds = mode === 'provision'
       ? JSON.parse(readFileSync(CREDS, 'utf8'))
       : { WP_USER: MANIFEST.credentials.WP_USER, WP_APP_PASSWORD: MANIFEST.credentials.WP_APP_PASSWORD, elementor: MANIFEST.elementor };
@@ -224,4 +267,5 @@ const timer = setInterval(async () => {
   }
 }, 1500);
 
-process.on('SIGINT', () => { try { child.kill(); } catch {} process.exit(0); });
+process.on('SIGINT', () => { shuttingDown = true; try { child?.kill(); } catch {} process.exit(0); });
+process.on('SIGTERM', () => { shuttingDown = true; try { child?.kill(); } catch {} process.exit(0); });
