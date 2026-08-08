@@ -1,17 +1,17 @@
 {
   "name": "@algorismus/elementor-ultra-playground snapshot",
-  "snapshot_version": 2,
-  "built_from": "v1 pristine extract + fixed companion plugin (css-dir recreate, static-404 guard, primer settle-retry, classes backup/restore) \u2014 2026-08-08; REUPLOAD release asset before npm publish",
+  "snapshot_version": 3,
+  "built_from": "v1 pristine extract + plugin 1.2.2 \u2014 2026-08-08",
   "wordpress": "bundled (Playground latest at build time)",
   "elementor": "4.2.1",
   "php": "8.2",
   "default_port": 8899,
-  "download_url": "https://github.com/Algorismus-io/elementor-ultra-mcp/releases/download/playground-snapshot-v2/site.tar.gz",
-  "release_tag": "playground-snapshot-v2",
+  "download_url": "https://github.com/Algorismus-io/elementor-ultra-mcp/releases/download/playground-snapshot-v3/site.tar.gz",
+  "release_tag": "playground-snapshot-v3",
   "tarball": {
     "file": "site.tar.gz",
-    "bytes": 52406544,
-    "sha256": "9d51a3618b52784b83f404536da340f955b44acc856d75d21ff8738e63027c34"
+    "bytes": 52407295,
+    "sha256": "d6aef28d8b5952f5f08513b2dc117cb0d9b4ed1313a3ffb0ef370b6a168dacea"
   },
   "credentials": {
     "WP_USER": "admin",

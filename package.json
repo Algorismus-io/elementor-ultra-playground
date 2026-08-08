@@ -1,6 +1,6 @@
 {
   "name": "@algorismus/elementor-ultra-playground",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "One command → a local WordPress with Elementor + the Elementor Ultra companion plugin, ready for exjsx and MCP. No Docker, no PHP, no git clone. Boots from a pre-baked snapshot in seconds.",
   "type": "module",
   "bin": {

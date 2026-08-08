@@ -127,6 +127,12 @@ function provisionArgs(cli) {
   mkdirSync(OUT, { recursive: true });
   return [
     cli, 'server', '--port', String(PORT), '--php', MANIFEST.php || '8.2',
+    // --workers 1: the cli defaults to min(6, cpus-1) PHP workers, each a separate WASM instance
+    // with its own Emscripten NODEFS node cache — files written via one worker are stale-missing in
+    // the others (random 404/500 on fresh css) and deleted files linger in whichever worker cached
+    // them (served-200-while-host-empty). One worker = one filesystem view = the whole flake class
+    // gone. Local agent builds don't need request concurrency.
+    '--workers', '1',
     '--site-url', `http://127.0.0.1:${PORT}`,
     '--mount-dir-before-install', SITE, '/wordpress',
     '--mount-dir-before-install', join(ASSETS, 'plugin'), '/wordpress/wp-content/plugins/elementor-ultra-mcp',
@@ -167,6 +173,7 @@ if (mode === 'provision') {
 } else {
   bootArgs = [
     cli, 'server', '--port', String(PORT), '--php', MANIFEST.php || '8.2',
+    '--workers', '1', // single FS view — see provisionArgs
     '--site-url', `http://127.0.0.1:${PORT}`,
     // BEFORE-install mount + "-if-needed" mode: Playground injects its SQLite driver during the
     // pre-install/boot phase and does NOT persist it into the site dir. Mounting after that phase
